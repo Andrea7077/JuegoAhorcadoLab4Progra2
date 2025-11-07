@@ -20,29 +20,27 @@ public class AdminPalabrasSecretas {
         listaPalabras = new ArrayList<>();
     }
 
-    public void agregarPalabra(String palabra) {
+    public void agregarPalabra(String palabra) throws Error.PalabraDuplicada {
         palabra = palabra.toUpperCase();
-        if (!listaPalabras.contains(palabra)) {
-            listaPalabras.add(palabra);
-            System.out.println("Palabra agregada: " + palabra);
-        } else {
-            System.out.println("La palabra [" + palabra + "] ya existe en la lista.");
+        if (listaPalabras.contains(palabra)) {
+            throw new Error.PalabraDuplicada("La palabra (" + palabra + ") ya existe en la lista.");
         }
+        listaPalabras.add(palabra);
+        System.out.println("Palabra agregada: " + palabra);
     }
 
-
-    public String obtenerPalabraAzar() {
+    public String obtenerPalabraAzar() throws Error.ListaVacia {
         if (listaPalabras.isEmpty()) {
-            System.out.println("No hay palabras disponibles.");
-            return null;
+            throw new Error.ListaVacia("No hay palabras disponibles para jugar.");
         }
         Random rand = new Random();
         return listaPalabras.get(rand.nextInt(listaPalabras.size()));
     }
 
     public void mostrarPalabras() {
-        System.out.println("Palabras registradas: " + listaPalabras);
+        System.out.println("📋 Palabras registradas: " + listaPalabras);
     }
 }
+
 
 
