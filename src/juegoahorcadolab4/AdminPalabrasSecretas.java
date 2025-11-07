@@ -20,7 +20,6 @@ public class AdminPalabrasSecretas {
         listaPalabras = new ArrayList<>();
     }
 
-    // 🟩 Agregar palabra (verifica duplicados)
     public void agregarPalabra(String palabra) {
         palabra = palabra.toUpperCase();
         if (!listaPalabras.contains(palabra)) {
@@ -42,7 +41,7 @@ public class AdminPalabrasSecretas {
     }
 
     public void mostrarPalabras() {
-        System.out.println("📋 Palabras registradas: " + listaPalabras);
+        System.out.println("Palabras registradas: " + listaPalabras);
     }
 }
 
