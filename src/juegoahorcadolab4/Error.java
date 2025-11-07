@@ -10,14 +10,14 @@ package juegoahorcadolab4;
  */
 public class Error {
 
-    static class ErrorPalabraDuplicada extends Exception {
-        public ErrorPalabraDuplicada(String mensaje) {
+    static class PalabraDuplicada extends Exception {
+        public PalabraDuplicada(String mensaje) {
             super(mensaje);
         }
     }
 
-    static class ErrorListaVacia extends Exception {
-        public ErrorListaVacia(String mensaje) {
+    static class ListaVacia extends Exception {
+        public ListaVacia(String mensaje) {
             super(mensaje);
         }
     }
