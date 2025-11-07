@@ -10,6 +10,7 @@ package juegoahorcadolab4;
  */
 public interface JuegoAhorcado {
     
+    // métodos escenciales
     void inicializarPalabraSecreta();
     void jugar();
     

@@ -26,7 +26,7 @@ public abstract class JuegoAhorcadoBase implements JuegoAhorcado {
         this.intentos = limiteIntentos;
     }
     
-    // Métodos claves
+    // métodos claves
     public void reiniciarJuego() {
         this.intentos = limiteIntentos;
         this.letrasUsadas.clear();
@@ -44,7 +44,7 @@ public abstract class JuegoAhorcadoBase implements JuegoAhorcado {
         return false;
     }
     
-    // Getters
+    // getters
     public String getPalabraActual() {
         return palabraActual;
     }
@@ -62,7 +62,7 @@ public abstract class JuegoAhorcadoBase implements JuegoAhorcado {
             intentos--;
     }
     
-    // Métodos abstractos
+    // métodos abstractos
     public abstract void actualizarPalabraActual(char letra);
     
     public abstract boolean verificarLetra(char letra);

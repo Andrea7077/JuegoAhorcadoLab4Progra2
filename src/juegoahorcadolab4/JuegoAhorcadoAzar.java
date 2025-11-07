@@ -7,7 +7,6 @@ package juegoahorcadolab4;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
-import java.util.Scanner;
 
 /**
  *
@@ -17,9 +16,9 @@ public class JuegoAhorcadoAzar extends JuegoAhorcadoBase {
     
     // atributos
     private final ArrayList<String> palabras;
+    private final Random random = new Random();
     
-    private final Random random = new Random;
-    
+    // constructores
     public JuegoAhorcadoAzar(ArrayList<String> palabrasDisponibles) {
         super();
         if (palabrasDisponibles == null || palabrasDisponibles.isEmpty()) {
@@ -43,21 +42,53 @@ public class JuegoAhorcadoAzar extends JuegoAhorcadoBase {
         this(null);
     }
     
+    // método clave 
     public void agregarPalabra(String palabra) {
         if (palabra != null && !palabra.isBlank()) {
             this.palabras.add(palabra.trim());
         }
     }
     
+    // getter
     public ArrayList<String> getPalaras() {
         return new ArrayList<>(palabras);
     }
     
+    // sobreescritura de los métodos abstractos
+    @Override
     public void inicializarPalabraSecreta() {
         if (palabras.isEmpty()) {
             throw new IllegalStateException("No hay palabras disponibles!");
         }
         
-        int idx = random.nextInt
+        int idx = random.nextInt(palabras.size());
+        this.palabraSecreta = palabras.get(idx).toLowerCase(Locale.ROOT);
+        reiniciarJuego();
+    }
+    
+    @Override
+    public void actualizarPalabraActual(char letra) {
+        char[] actual = palabraActual.toCharArray();
+        for (int i = 0; i < palabraSecreta.length(); i++) {
+            if (palabraSecreta.charAt(i) == letra) {
+                actual[i] = letra;
+            }
+        }
+        palabraActual = new String(actual);
+    }
+    
+    @Override
+    public boolean verificarLetra(char letra) {
+        return palabraSecreta.indexOf(letra) >= 0;
+    }
+    
+    @Override
+    public boolean hasGanado() {
+        return !palabraActual.contains("_");
+    }
+    
+    @Override
+    public void jugar() {
+        inicializarPalabraSecreta();
     }
 }
