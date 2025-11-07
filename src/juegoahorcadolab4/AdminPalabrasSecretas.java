@@ -8,7 +8,6 @@ package juegoahorcadolab4;
  *
  * @author jerem
  */
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,6 +17,12 @@ public class AdminPalabrasSecretas {
 
     public AdminPalabrasSecretas() {
         listaPalabras = new ArrayList<>();
+
+        listaPalabras.add("BATMAN");
+        listaPalabras.add("VOLEIBOL");
+        listaPalabras.add("DANZA");
+        listaPalabras.add("GIMNASIO");
+        listaPalabras.add("MUSICA");
     }
 
     public void agregarPalabra(String palabra) throws Error.PalabraDuplicada {
@@ -41,6 +46,7 @@ public class AdminPalabrasSecretas {
         System.out.println("📋 Palabras registradas: " + listaPalabras);
     }
 }
+
 
 
 
