@@ -20,14 +20,25 @@ public class JuegoAhorcadoAzar extends JuegoAhorcadoBase {
 
     // constructores
     public JuegoAhorcadoAzar(ArrayList<String> palabrasDisponibles) {
-        super();
-        this.palabras = new ArrayList<>();
-        this.palabras.add("Sombrero");
-        this.palabras.add("Botella");
-        this.palabras.add("Naturaleza");
-        this.palabras.add("Erizo");
-        this.palabras.add("Silla");
-        this.palabras.add("Criminal");
+       super();
+    this.palabras = new ArrayList<>();
+
+    // Primero agregamos las palabras predeterminadas
+    this.palabras.add("sombrero");
+    this.palabras.add("botella");
+    this.palabras.add("naturaleza");
+    this.palabras.add("erizo");
+    this.palabras.add("silla");
+    this.palabras.add("criminal");
+
+    if (palabrasDisponibles != null && !palabrasDisponibles.isEmpty()) {
+        for (String p : palabrasDisponibles) {
+            String lower = p.toLowerCase().trim();
+            if (!this.palabras.contains(lower)) { // evitar duplicados
+                this.palabras.add(lower);
+            }
+        }
+    }
     }
 
     public JuegoAhorcadoAzar() {

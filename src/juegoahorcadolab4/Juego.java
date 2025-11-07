@@ -52,11 +52,7 @@ public class Juego extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         JLabel lblAgregar = new JLabel("Agregar palabras aleatorias:");
-        lblAgregar.setFont(new Font("Verdana", Font.PLAIN, 14));
-        lblAgregar.setForeground(Color.decode("#2e7d32"));
-        lblAgregar.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(lblAgregar);
+       
         // Título
         JLabel titulo = new JLabel("AHORCADO");
         titulo.setFont(new Font("Verdana", Font.BOLD, 28));
