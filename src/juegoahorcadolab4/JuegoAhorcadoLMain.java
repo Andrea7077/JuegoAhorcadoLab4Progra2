@@ -8,14 +8,11 @@ package juegoahorcadolab4;
  *
  * @author andre
  */
-public class JuegoAhorcadoLab4 {
+public class JuegoAhorcadoLMain {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-//hola
-//uwu
+        new PantallaAhorcado().setVisible(true);
+
     }
-    
+
 }
