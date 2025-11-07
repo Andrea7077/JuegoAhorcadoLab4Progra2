@@ -72,6 +72,7 @@ public class JuegoAhorcadoAzar extends JuegoAhorcadoBase {
         }
     }
 
+  
     // getter
     public ArrayList<String> getPalaras() {
         return new ArrayList<>(palabras);

@@ -168,15 +168,20 @@ public class Juego extends JFrame {
     // ===================== Eventos =====================
     private void iniciarModoAzar(ActionEvent e) {
         try {
+        ArrayList<String> lista = adminPalabras.getLista(); 
+        if (lista.isEmpty()) {
             juego = new JuegoAhorcadoAzar();
-            juego.inicializarPalabraSecreta();
-
-            lblMensaje.setText("Modo: Aleatorio. ¡A jugar!");
-            resetYRefrescar();
-            habilitarEntrada(true);
-        } catch (Exception ex) {
-            lblMensaje.setText("Error: " + ex.getMessage());
+        } else {
+            juego = new JuegoAhorcadoAzar(lista);
         }
+        
+        juego.inicializarPalabraSecreta();
+        lblMensaje.setText("Modo: Aleatorio. ¡A jugar!");
+        resetYRefrescar();
+        habilitarEntrada(true);
+    } catch (Exception ex) {
+        lblMensaje.setText("Error: " + ex.getMessage());
+    }
     }
 
     private void iniciarModoFijo(ActionEvent e) {

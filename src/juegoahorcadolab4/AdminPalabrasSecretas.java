@@ -40,6 +40,10 @@ public class AdminPalabrasSecretas {
     public void mostrarPalabras() {
         System.out.println("📋 Palabras registradas: " + listaPalabras);
     }
+    
+    public ArrayList<String> getLista() {
+    return new ArrayList<>(listaPalabras);
+}
 }
 
 
