@@ -13,12 +13,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-
 public class Juego extends JFrame {
-    
-    private JuegoAhorcadoBase juego;
-    private final int LIMITE_DEFECTO = 6;
 
+    private AdminPalabrasSecretas adminPalabras = new AdminPalabrasSecretas();
+    // ----- Lógica -----
+    private JuegoAhorcadoBase juego; // Azar o Fijo (polimórfico)
+    private final int LIMITE_DEFECTO = 6;       // si tu base expone getLimiteIntentos(), usaremos ese valor
+
+    // ----- Diseño (tus componentes) -----
     protected JLabel lblPalabraActual;
     protected JLabel lblIntentos;
     protected JTextArea txtAhorcado;
@@ -28,6 +30,7 @@ public class Juego extends JFrame {
     protected JButton btnAzar;
     protected JLabel lblMensaje;
     protected JTextArea txtLetrasUsadas;
+    protected JButton btnAgregarPalabra;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -43,18 +46,26 @@ public class Juego extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
+        // Panel principal compacto y centrado
         JPanel panel = new JPanel();
-        panel.setBackground(Color.decode("#f0fff0"));
+        panel.setBackground(Color.decode("#f0fff0")); // fondo verde muy suave
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
+        JLabel lblAgregar = new JLabel("Agregar palabras aleatorias:");
+        lblAgregar.setFont(new Font("Verdana", Font.PLAIN, 14));
+        lblAgregar.setForeground(Color.decode("#2e7d32"));
+        lblAgregar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(lblAgregar);
+        // Título
         JLabel titulo = new JLabel("AHORCADO");
         titulo.setFont(new Font("Verdana", Font.BOLD, 28));
-        titulo.setForeground(Color.decode("#2e7d32"));
+        titulo.setForeground(Color.decode("#2e7d32")); // verde más fuerte
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(titulo);
         panel.add(Box.createVerticalStrut(15));
 
+        // Botones de modo de juego
         JPanel panelModos = new JPanel();
         panelModos.setBackground(Color.decode("#f0fff0"));
         btnFijo = crearBoton("Palabra Fija", "#2e7d32");
@@ -64,7 +75,11 @@ public class Juego extends JFrame {
         panelModos.add(btnAzar);
         panel.add(panelModos);
         panel.add(Box.createVerticalStrut(15));
+        btnAgregarPalabra = crearBoton("Agregar Palabra", "#388e3c"); // color diferente
+        panelModos.add(Box.createHorizontalStrut(15));
+        panelModos.add(btnAgregarPalabra);
 
+        // Figura del ahorcado
         txtAhorcado = new JTextArea(7, 20);
         txtAhorcado.setFont(new Font("Monospaced", Font.PLAIN, 16));
         txtAhorcado.setEditable(false);
@@ -75,6 +90,7 @@ public class Juego extends JFrame {
         panel.add(txtAhorcado);
         panel.add(Box.createVerticalStrut(10));
 
+        // Palabra actual
         lblPalabraActual = new JLabel("_ _ _ _ _");
         lblPalabraActual.setFont(new Font("Verdana", Font.BOLD, 26));
         lblPalabraActual.setForeground(Color.decode("#2e7d32"));
@@ -82,6 +98,7 @@ public class Juego extends JFrame {
         panel.add(lblPalabraActual);
         panel.add(Box.createVerticalStrut(10));
 
+        // Intentos restantes
         lblIntentos = new JLabel("Intentos: 6");
         lblIntentos.setFont(new Font("Verdana", Font.PLAIN, 16));
         lblIntentos.setForeground(Color.decode("#2e7d32"));
@@ -89,6 +106,7 @@ public class Juego extends JFrame {
         panel.add(lblIntentos);
         panel.add(Box.createVerticalStrut(10));
 
+        // Letras usadas
         JLabel lblLetras = new JLabel("Letras usadas:");
         lblLetras.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(lblLetras);
@@ -103,6 +121,7 @@ public class Juego extends JFrame {
         panel.add(txtLetrasUsadas);
         panel.add(Box.createVerticalStrut(15));
 
+        // Panel de entrada para letra
         JPanel panelEntrada = new JPanel();
         panelEntrada.setBackground(Color.decode("#f0fff0"));
         panelEntrada.add(new JLabel("Letra:"));
@@ -115,6 +134,7 @@ public class Juego extends JFrame {
         panel.add(panelEntrada);
         panel.add(Box.createVerticalStrut(10));
 
+        // Mensaje de guía
         lblMensaje = new JLabel("Seleccione un modo de juego");
         lblMensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblMensaje.setFont(new Font("Verdana", Font.PLAIN, 14));
@@ -123,28 +143,41 @@ public class Juego extends JFrame {
 
         add(panel);
 
+        // === Eventos ===
         btnAzar.addActionListener(this::iniciarModoAzar);
         btnFijo.addActionListener(this::iniciarModoFijo);
         btnProbar.addActionListener(this::probarLetra);
         txtLetra.addActionListener(this::probarLetra); // Enter
+        btnAgregarPalabra.addActionListener(e -> {
+            String nueva = JOptionPane.showInputDialog(this, "Ingrese nueva palabra:");
+            if (nueva == null || nueva.isBlank()) {
+                return;
+            }
 
+            try {
+                adminPalabras.agregarPalabra(nueva);
+                lblMensaje.setText("Palabra agregada: " + nueva.toUpperCase());
+            } catch (Error.PalabraDuplicada ex) {
+                lblMensaje.setText(ex.getMessage());
+            }
+        });
+        // Estado inicial
         habilitarEntrada(false);
     }
 
+    // ===================== Eventos =====================
     private void iniciarModoAzar(ActionEvent e) {
-    try {
-        // Usa el banco interno de la clase JuegoAhorcadoAzar
-        juego = new JuegoAhorcadoAzar();   // ← sin ArrayList externo
-        juego.inicializarPalabraSecreta();
+        try {
+            juego = new JuegoAhorcadoAzar();
+            juego.inicializarPalabraSecreta();
 
-        lblMensaje.setText("Modo: Aleatorio. ¡A jugar!");
-        resetYRefrescar();
-        habilitarEntrada(true);
-    } catch (Exception ex) {
-        lblMensaje.setText("Error: " + ex.getMessage());
+            lblMensaje.setText("Modo: Aleatorio. ¡A jugar!");
+            resetYRefrescar();
+            habilitarEntrada(true);
+        } catch (Exception ex) {
+            lblMensaje.setText("Error: " + ex.getMessage());
+        }
     }
-}
-
 
     private void iniciarModoFijo(ActionEvent e) {
         try {
@@ -172,7 +205,9 @@ public class Juego extends JFrame {
 
         String in = txtLetra.getText().trim().toLowerCase();
         txtLetra.setText("");
-        if (in.isEmpty()) return;
+        if (in.isEmpty()) {
+            return;
+        }
 
         char c = in.charAt(0);
         if (!Character.isLetter(c)) {
@@ -180,48 +215,61 @@ public class Juego extends JFrame {
             return;
         }
 
+        // Llamamos a intentar(...) y lo convertimos a String (funciona con ambos enums)
         String res = intentarComoString(c);
 
         switch (res) {
-            case "REPETIDA" -> lblMensaje.setText("Letra repetida.");
-            case "INVALIDA" -> lblMensaje.setText("Entrada inválida.");
-            case "ACIERTO" -> lblMensaje.setText("¡Correcto!");
-            case "FALLO" -> lblMensaje.setText("Incorrecto.");
+            case "REPETIDA" ->
+                lblMensaje.setText("Letra repetida.");
+            case "INVALIDA" ->
+                lblMensaje.setText("Entrada inválida.");
+            case "ACIERTO" ->
+                lblMensaje.setText("¡Correcto!");
+            case "FALLO" ->
+                lblMensaje.setText("Incorrecto.");
             case "VICTORIA" -> {
-
+                // Mensaje solo si ganó por acierto (palabra sin guiones)
                 if (!juego.getPalabraActual().contains("_")) {
-                    lblMensaje.setText("FELICITACIONES! Has adivinado la palabra: "
+                    lblMensaje.setText("🎉 ¡FELICITACIONES! Has adivinado la palabra: "
                             + juego.getPalabraSecreta().toUpperCase());
                 }
                 habilitarEntrada(false);
             }
             case "DERROTA" -> {
+                // Solo si se acabaron los intentos
                 if (juego.getIntentos() == 0) {
-                    lblMensaje.setText("Lo sentimos, ha perdido. La palabra era: " 
-                                       + juego.getPalabraSecreta());
+                    // Nota: se utiliza exactamente el texto solicitado por ti
+                    lblMensaje.setText("Lo sentimos. A perdido");
                 }
                 habilitarEntrada(false);
             }
-            default -> {}
+            default -> {
+            }
         }
 
         refrescarVista();
     }
 
+    // ===================== Lógica de apoyo =====================
     private void resetYRefrescar() {
+        // Palabra, intentos, letras usadas, figura
         refrescarVista();
         txtAhorcado.setText(getFigura(0));
     }
 
     private void refrescarVista() {
+        // Palabra con espacios
         String p = (juego != null) ? juego.getPalabraActual() : "";
         lblPalabraActual.setText(formatoEspaciado(p));
 
+        // Intentos
         int intentos = (juego != null) ? juego.getIntentos() : LIMITE_DEFECTO;
         lblIntentos.setText("Intentos: " + intentos);
 
+        // Letras usadas
         txtLetrasUsadas.setText((juego != null) ? juego.getLetrasUsadas().toString() : "");
 
+        // Figura según fallos
         int fallos = calcularFallos();
         txtAhorcado.setText(getFigura(fallos));
     }
@@ -229,7 +277,9 @@ public class Juego extends JFrame {
     private void habilitarEntrada(boolean on) {
         txtLetra.setEnabled(on);
         btnProbar.setEnabled(on);
-        if (on) txtLetra.requestFocusInWindow();
+        if (on) {
+            txtLetra.requestFocusInWindow();
+        }
     }
 
     private String intentarComoString(char letra) {
@@ -249,19 +299,27 @@ public class Juego extends JFrame {
         }
     }
 
+    /**
+     * Calcula fallos como (límite - intentos). Si tu base expone
+     * getLimiteIntentos(), úsalo.
+     */
     private int calcularFallos() {
         int limite = LIMITE_DEFECTO;
         try {
+            // Si tu JuegoAhorcadoBase tiene getLimiteIntentos(), úsalo:
             limite = (int) JuegoAhorcadoBase.class
                     .getMethod("getLimiteIntentos")
                     .invoke(juego);
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         int intentosRestantes = (juego != null) ? juego.getIntentos() : limite;
         return Math.max(0, limite - intentosRestantes);
     }
 
     private String formatoEspaciado(String palabra) {
-        if (palabra == null) return "";
+        if (palabra == null) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         for (char c : palabra.toCharArray()) {
             sb.append(c).append(' ');
@@ -269,7 +327,7 @@ public class Juego extends JFrame {
         return sb.toString().trim();
     }
 
-
+    // ===================== Estilo y utilitarios visuales =====================
     private JButton crearBoton(String texto, String colorHex) {
         JButton btn = new JButton(texto);
         btn.setBackground(Color.decode(colorHex));
@@ -285,9 +343,13 @@ public class Juego extends JFrame {
         return btn;
     }
 
+    /**
+     * Figura ASCII por número de fallos (0 a 6).
+     */
     private String getFigura(int fallos) {
         return switch (Math.max(0, Math.min(6, fallos))) {
-            case 0 -> """
+            case 0 ->
+                """
                        
                        ______
                        |    |
@@ -296,25 +358,28 @@ public class Juego extends JFrame {
                        |     
                       _|_
                     """;
-            case 1 -> """
-                       
-                       ______
-                       |    |
-                       |    O
-                       |     
-                       |     
-                      _|_
-                    """;
-            case 2 -> """
+            case 1 ->
+                """
                        
                        ______
                        |    |
                        |    O
+                       |     
+                       |     
+                      _|_
+                    """;
+            case 2 ->
+                """
+                       
+                       ______
+                       |    |
+                       |    O
                        |    |
                        |     
                       _|_
                     """;
-            case 3 -> """
+            case 3 ->
+                """
                        
                        ______
                        |    |
@@ -323,7 +388,8 @@ public class Juego extends JFrame {
                        |     
                       _|_
                     """;
-            case 4 -> """
+            case 4 ->
+                """
                        
                        ______
                        |    |
@@ -332,7 +398,8 @@ public class Juego extends JFrame {
                        |     
                       _|_
                     """;
-            case 5 -> """
+            case 5 ->
+                """
                        
                        ______
                        |    |
@@ -341,7 +408,8 @@ public class Juego extends JFrame {
                        |   / 
                       _|_
                     """;
-            default -> """
+            default ->
+                """
                        
                        ______
                        |    |

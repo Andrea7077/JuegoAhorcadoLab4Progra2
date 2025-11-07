@@ -7,64 +7,67 @@ package juegoahorcadolab4;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
+
 /**
  *
  * @author najma
  */
 public class JuegoAhorcadoAzar extends JuegoAhorcadoBase {
-    
+
     // atributos
     private final ArrayList<String> palabras;
     private final Random random = new Random();
-    
+
     // constructores
     public JuegoAhorcadoAzar(ArrayList<String> palabrasDisponibles) {
         super();
-        if (palabrasDisponibles == null || palabrasDisponibles.isEmpty()) {
-            this.palabras = new ArrayList<>();
-            this.palabras.add("Sombrero");
-            this.palabras.add("Iugana");
-            this.palabras.add("Botella");
-            this.palabras.add("Computadora");
-            this.palabras.add("Naturaleza");
-            this.palabras.add("Erizo");
-            this.palabras.add("Lago");
-            this.palabras.add("Casa");
-            this.palabras.add("Silla");
-            this.palabras.add("Criminal");
-        } else {
-            this.palabras = new ArrayList<>(palabrasDisponibles);
-        }
+        this.palabras = new ArrayList<>();
+        this.palabras.add("Sombrero");
+        this.palabras.add("Botella");
+        this.palabras.add("Naturaleza");
+        this.palabras.add("Erizo");
+        this.palabras.add("Silla");
+        this.palabras.add("Criminal");
     }
-    
+
     public JuegoAhorcadoAzar() {
         this(null);
     }
-    
+
     // métodos claves
     public void agregarPalabra(String palabra) {
         if (palabra != null && !palabra.isBlank()) {
             this.palabras.add(palabra.trim());
         }
-        
+
     }
-    
-    public enum ResultadoIntento { ACIERTO, FALLO, REPETIDA, INVALIDA, VICTORIA, DERROTA }
+
+    public enum ResultadoIntento {
+        ACIERTO, FALLO, REPETIDA, INVALIDA, VICTORIA, DERROTA
+    }
 
     public ResultadoIntento intentar(char entrada) {
         char letra = Character.toLowerCase(entrada);
 
-        if (!Character.isLetter(letra)) return ResultadoIntento.INVALIDA;
+        if (!Character.isLetter(letra)) {
+            return ResultadoIntento.INVALIDA;
+        }
 
-        if (!registrarLetra(letra)) return ResultadoIntento.REPETIDA;
+        if (!registrarLetra(letra)) {
+            return ResultadoIntento.REPETIDA;
+        }
 
         if (verificarLetra(letra)) {
             actualizarPalabraActual(letra);
-            if (hasGanado()) return ResultadoIntento.VICTORIA;
+            if (hasGanado()) {
+                return ResultadoIntento.VICTORIA;
+            }
             return ResultadoIntento.ACIERTO;
         } else {
             perderIntento();
-            if (getIntentos() == 0) return ResultadoIntento.DERROTA;
+            if (getIntentos() == 0) {
+                return ResultadoIntento.DERROTA;
+            }
             return ResultadoIntento.FALLO;
         }
     }
@@ -73,19 +76,19 @@ public class JuegoAhorcadoAzar extends JuegoAhorcadoBase {
     public ArrayList<String> getPalaras() {
         return new ArrayList<>(palabras);
     }
-    
+
     // sobreescritura de los métodos abstractos
     @Override
     public void inicializarPalabraSecreta() {
         if (palabras.isEmpty()) {
             throw new IllegalStateException("No hay palabras disponibles!");
         }
-        
+
         int idx = random.nextInt(palabras.size());
         this.palabraSecreta = palabras.get(idx).toLowerCase(Locale.ROOT);
         reiniciarJuego();
     }
-    
+
     @Override
     public void actualizarPalabraActual(char letra) {
         char[] actual = palabraActual.toCharArray();
@@ -96,17 +99,17 @@ public class JuegoAhorcadoAzar extends JuegoAhorcadoBase {
         }
         palabraActual = new String(actual);
     }
-    
+
     @Override
     public boolean verificarLetra(char letra) {
         return palabraSecreta.indexOf(letra) >= 0;
     }
-    
+
     @Override
     public boolean hasGanado() {
         return !palabraActual.contains("_");
     }
-    
+
     @Override
     public void jugar() {
         inicializarPalabraSecreta();
