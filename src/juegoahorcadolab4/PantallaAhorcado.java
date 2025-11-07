@@ -13,72 +13,74 @@ import java.awt.*;
  */
 public class PantallaAhorcado extends JFrame {
 //Diseno
-    protected JLabel PalabraActual;
-    protected JLabel Intentos;
-    protected JTextArea Ahorcado;
-    protected JTextField Letra;
+
+    protected JLabel lblPalabraActual;
+    protected JLabel lblIntentos;
+    protected JTextArea txtAhorcado;
+    protected JTextField txtLetra;
     protected JButton btnProbar;
-    protected JButton btnJuegoFijo;
-    protected JButton btnJuegoAzar;
+    protected JButton btnFijo;
+    protected JButton btnAzar;
     protected JLabel lblMensaje;
-    protected JTextArea LetrasUsadas;
+    protected JTextArea txtLetrasUsadas;
 
     public PantallaAhorcado() {
         setTitle("Juego del Ahorcado");
-        setSize(600, 550);
+        setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        // Panel principal
+        // Panel principal compacto y centrado
         JPanel panel = new JPanel();
-        panel.setBackground(Color.decode("#f4f4f4"));
+        panel.setBackground(Color.decode("#f0fff0")); // fondo verde muy suave
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         // Título
         JLabel titulo = new JLabel("AHORCADO");
         titulo.setFont(new Font("Verdana", Font.BOLD, 28));
-        titulo.setForeground(Color.decode("#333"));
+        titulo.setForeground(Color.decode("#2e7d32")); // verde más fuerte
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(titulo);
         panel.add(Box.createVerticalStrut(15));
 
-        // Botones de modo
-        JPanel panelBotones = new JPanel();
-        panelBotones.setBackground(Color.decode("#f4f4f4"));
-        btnJuegoFijo = crearBoton("Palabra Fija", "#ff9800");
-        btnJuegoAzar = crearBoton("Palabra Aleatoria", "#4caf50");
-        panelBotones.add(btnJuegoFijo);
-        panelBotones.add(Box.createHorizontalStrut(10));
-        panelBotones.add(btnJuegoAzar);
-        panel.add(panelBotones);
+        // Botones de modo de juego
+        JPanel panelModos = new JPanel();
+        panelModos.setBackground(Color.decode("#f0fff0"));
+        btnFijo = crearBoton("Palabra Fija", "#2e7d32");
+        btnAzar = crearBoton("Palabra Aleatoria", "#2e7d32");
+        panelModos.add(btnFijo);
+        panelModos.add(Box.createHorizontalStrut(15));
+        panelModos.add(btnAzar);
+        panel.add(panelModos);
         panel.add(Box.createVerticalStrut(15));
 
         // Figura del ahorcado
-        Ahorcado = new JTextArea(7, 20);
-        Ahorcado.setFont(new Font("Monospaced", Font.PLAIN, 16));
-        Ahorcado.setEditable(false);
-        Ahorcado.setText(getFiguraInicial());
-        Ahorcado.setBackground(Color.decode("#e0e0e0"));
-        Ahorcado.setBorder(BorderFactory.createLineBorder(Color.decode("#333")));
-        panel.add(Ahorcado);
+        txtAhorcado = new JTextArea(7, 20);
+        txtAhorcado.setFont(new Font("Monospaced", Font.PLAIN, 16));
+        txtAhorcado.setEditable(false);
+        txtAhorcado.setText(getFiguraInicial());
+        txtAhorcado.setBackground(Color.decode("#e8f5e9"));
+        txtAhorcado.setBorder(BorderFactory.createLineBorder(Color.decode("#2e7d32")));
+        txtAhorcado.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(txtAhorcado);
         panel.add(Box.createVerticalStrut(10));
 
         // Palabra actual
-        PalabraActual = new JLabel("_ _ _ _ _");
-        PalabraActual.setFont(new Font("Verdana", Font.BOLD, 26));
-        PalabraActual.setForeground(Color.decode("#333"));
-        PalabraActual.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(PalabraActual);
+        lblPalabraActual = new JLabel("_ _ _ _ _");
+        lblPalabraActual.setFont(new Font("Verdana", Font.BOLD, 26));
+        lblPalabraActual.setForeground(Color.decode("#2e7d32"));
+        lblPalabraActual.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(lblPalabraActual);
         panel.add(Box.createVerticalStrut(10));
 
-        // Intentos
-        Intentos = new JLabel("Intentos: 6");
-        Intentos.setFont(new Font("Verdana", Font.PLAIN, 16));
-        Intentos.setForeground(Color.decode("#333"));
-        Intentos.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(Intentos);
+        // Intentos restantes
+        lblIntentos = new JLabel("Intentos: 6");
+        lblIntentos.setFont(new Font("Verdana", Font.PLAIN, 16));
+        lblIntentos.setForeground(Color.decode("#2e7d32"));
+        lblIntentos.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(lblIntentos);
         panel.add(Box.createVerticalStrut(10));
 
         // Letras usadas
@@ -86,32 +88,34 @@ public class PantallaAhorcado extends JFrame {
         lblLetras.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(lblLetras);
 
-        LetrasUsadas = new JTextArea(2, 20);
-        LetrasUsadas.setEditable(false);
-        LetrasUsadas.setLineWrap(true);
-        LetrasUsadas.setWrapStyleWord(true);
-        LetrasUsadas.setBackground(Color.decode("#e0e0e0"));
-        LetrasUsadas.setBorder(BorderFactory.createLineBorder(Color.decode("#333")));
-        panel.add(LetrasUsadas);
+        txtLetrasUsadas = new JTextArea(2, 20);
+        txtLetrasUsadas.setEditable(false);
+        txtLetrasUsadas.setLineWrap(true);
+        txtLetrasUsadas.setWrapStyleWord(true);
+        txtLetrasUsadas.setBackground(Color.decode("#e8f5e9"));
+        txtLetrasUsadas.setBorder(BorderFactory.createLineBorder(Color.decode("#2e7d32")));
+        txtLetrasUsadas.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(txtLetrasUsadas);
         panel.add(Box.createVerticalStrut(15));
 
-        // Panel de entrada
+        // Panel de entrada para letra
         JPanel panelEntrada = new JPanel();
-        panelEntrada.setBackground(Color.decode("#f4f4f4"));
+        panelEntrada.setBackground(Color.decode("#f0fff0"));
         panelEntrada.add(new JLabel("Letra:"));
-        Letra = new JTextField(3);
-        Letra.setFont(new Font("Verdana", Font.BOLD, 20));
-        panelEntrada.add(Letra);
-        btnProbar = crearBoton("Probar", "#2196f3");
+        txtLetra = new JTextField(3);
+        txtLetra.setFont(new Font("Verdana", Font.BOLD, 20));
+        panelEntrada.add(txtLetra);
+        btnProbar = crearBoton("Probar", "#2e7d32");
         panelEntrada.add(btnProbar);
+        panelEntrada.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(panelEntrada);
         panel.add(Box.createVerticalStrut(10));
 
-        // Mensaje
+        // Mensaje de guía
         lblMensaje = new JLabel("Seleccione un modo de juego");
         lblMensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblMensaje.setFont(new Font("Verdana", Font.PLAIN, 14));
-        lblMensaje.setForeground(Color.decode("#555"));
+        lblMensaje.setForeground(Color.decode("#388e3c"));
         panel.add(lblMensaje);
 
         add(panel);
@@ -122,14 +126,19 @@ public class PantallaAhorcado extends JFrame {
         btn.setBackground(Color.decode(colorHex));
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
-        btn.setFont(new Font("Verdana", Font.BOLD, 14));
-        btn.setPreferredSize(new Dimension(150, 35));
+        btn.setFont(new Font("Verdana", Font.BOLD, 16));
+        btn.setPreferredSize(new Dimension(160, 40));
+        btn.setBorder(BorderFactory.createLineBorder(Color.decode("#1b5e20"), 2));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setOpaque(true);
+        btn.setBorderPainted(true);
+        btn.setAlignmentX(Component.CENTER_ALIGNMENT);
         return btn;
     }
 
     private String getFiguraInicial() {
         return """
-               
+                 
                   ______
                   |    |
                   |     

@@ -7,7 +7,6 @@ package juegoahorcadolab4;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
-
 /**
  *
  * @author najma
