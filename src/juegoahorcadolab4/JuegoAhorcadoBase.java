@@ -45,6 +45,10 @@ public abstract class JuegoAhorcadoBase implements JuegoAhorcado {
     }
     
     // getters
+    
+    public String getPalabraSecreta() {
+        return palabraSecreta;
+    }
     public String getPalabraActual() {
         return palabraActual;
     }

@@ -77,7 +77,33 @@ public class JuegoAhorcadoFijo extends JuegoAhorcadoBase {
         inicializarPalabraSecreta();
 
     }
+    
+        public enum ResultadoIntento { ACIERTO, FALLO, REPETIDA, INVALIDA, VICTORIA, DERROTA }
 
+    public ResultadoIntento intentar(char entrada) {
+        char letra = Character.toUpperCase(entrada);
+
+        // Validación de entrada
+        if (!Character.isLetter(letra)) return ResultadoIntento.INVALIDA;
+
+        // Letra repetida
+        if (letrasUsadas.contains(letra)) return ResultadoIntento.REPETIDA;
+
+        // Registrar letra nueva
+        letrasUsadas.add(letra);
+
+        // Verificar si acierta
+        if (palabraSecreta.indexOf(letra) >= 0) {
+            actualizarPalabraActual(letra);
+            if (hasGanado()) return ResultadoIntento.VICTORIA;
+            return ResultadoIntento.ACIERTO;
+        } else {
+            intentos--;
+            if (intentos == 0) return ResultadoIntento.DERROTA;
+            return ResultadoIntento.FALLO;
+        }
+    }
+    
     public String mostrarFigura() {
         String[] figura = {
             " ______",

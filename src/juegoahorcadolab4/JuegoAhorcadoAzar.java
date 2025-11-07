@@ -41,13 +41,38 @@ public class JuegoAhorcadoAzar extends JuegoAhorcadoBase {
         this(null);
     }
     
-    // método clave 
+    // métodos claves
     public void agregarPalabra(String palabra) {
         if (palabra != null && !palabra.isBlank()) {
             this.palabras.add(palabra.trim());
         }
     }
     
+    public enum ResultadoIntento { ACIERTO, FALLO, REPETIDA, INVALIDA, VICTORIA, DERROTA }
+
+    public ResultadoIntento intentar(char entrada) {
+        char letra = Character.toLowerCase(entrada);
+
+        // Validación: solo letras
+        if (!Character.isLetter(letra)) return ResultadoIntento.INVALIDA;
+
+        // Evitar duplicados
+        if (!registrarLetra(letra)) return ResultadoIntento.REPETIDA;
+
+        // ¿La letra pertenece a la palabra?
+        if (verificarLetra(letra)) {
+            actualizarPalabraActual(letra);
+            // ¿Ya no quedan guiones bajos? -> Victoria
+            if (hasGanado()) return ResultadoIntento.VICTORIA;
+            return ResultadoIntento.ACIERTO;
+        } else {
+            // Fallo: restar intento y verificar derrota
+            perderIntento();
+            if (getIntentos() == 0) return ResultadoIntento.DERROTA;
+            return ResultadoIntento.FALLO;
+        }
+    }
+
     // getter
     public ArrayList<String> getPalaras() {
         return new ArrayList<>(palabras);
