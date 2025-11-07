@@ -11,7 +11,7 @@ package juegoahorcadolab4;
 public class JuegoAhorcadoLMain {
 
     public static void main(String[] args) {
-        new PantallaAhorcado().setVisible(true);
+        new Juego().setVisible(true);
 
     }
 
